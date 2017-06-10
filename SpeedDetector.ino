@@ -1,3 +1,7 @@
+// The sensor send and recieve code is based off David Mellis and Tom Igoe's code PING)))
+
+// Created by Jacob Gus June 9th 2017
+
 // this constant won't change.  It's the pin number
 // of the sensor's output:
 const int pingPin = 7;
@@ -12,10 +16,12 @@ void setup() {
 void loop() {
   
   // establish variables for duration of the ping,
-  // and the distance result in inches and centimeters:
-  float duration1, duration2, inches1, inches2, cm , differencePost, differencePreABS, distanceA, distanceB, startTime, elapsedTime, elapsedSeconds, FPS, IPS, MPH;
+  // and the distance result in inches:
+  float duration1, duration2, inches1, inches2, differencePost, differencePreABS, distanceA, distanceB, startTime, elapsedTime, elapsedSeconds, FPS, IPS, MPH;
   
 if (1){ 
+  //Value 1 starts here 
+  
   //Start the timmer 
   startTime = millis();
   
@@ -30,12 +36,14 @@ if (1){
   //Listen for PING back on same pin
   pinMode(pingPin, INPUT);
   duration1 = pulseIn(pingPin, HIGH);
- 
+
+ //End of Value 1
 
   delay(100);
 
+ //Value 2 Starts here
  
-  // PING triggered
+ // PING triggered
   pinMode(pingPin, OUTPUT);
   digitalWrite(pingPin, LOW);
   delayMicroseconds(20000);
@@ -46,8 +54,13 @@ if (1){
   //Listen for PING back on same pin
   pinMode(pingPin, INPUT);
   duration2 = pulseIn(pingPin, HIGH);
-  
+
+  //End of Value 2
+
+  //Take the elapsed time between millis started and stopped and subtract it
   elapsedTime = millis() - startTime;
+
+  //Divide by 1000 to change milliseconds into seconds
   elapsedSeconds = (elapsedTime / 1000);
 
 
@@ -55,30 +68,37 @@ if (1){
   // convert the first time into a distance
   inches1 = microsecondsToInches(duration1);
 
-  //set our first distance 
+  //set our distance of Value 1 
   distanceA = inches1;
   
-    // convert the second time into a distance
+  //convert the second time into a distance
   inches2 = microsecondsToInches(duration2);
 
-  //set our first distance 
+  //set our distance  of Value 2
   distanceB = inches2;
 
   //Find difference in distance A and B
   differencePreABS = distanceA - distanceB;
 
-//Find absolute value of distance
+//Find absolute value of distance incase the object is moving in a direction that would produce a negative number
 if (differencePreABS < 0){
   differencePost = differencePreABS * -1;
   }
   else{
     differencePost = differencePreABS * 1;
   }
+//IPS = Inches Per Second, FPS = Feet Per Second, MPH = Miles Per Hour
 
+//Find our Inches Per Second
   IPS = (differencePost / elapsedSeconds);
+
+  //Divide by Inches Per Second by 12 to get Feet Per second
   FPS = (IPS / 12);
+
+  //Multiple Feet Per Second by .6818 to get Miles Per Hour
   MPH = (FPS * .6818);
 
+  //Print all the data 
   Serial.print("Speed in MPH: ");
   Serial.print(MPH);
   Serial.println();
